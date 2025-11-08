@@ -26,6 +26,7 @@ Y = [row[1] for row in dataset]
 #Prediction
 #Errors []
 def errors():
+	print("something")
 #sum of Errors
 #Gradient
 #Gradient upate rule
@@ -34,4 +35,4 @@ def errors():
 	#errors
 	#squared errors
 	#sum
-	#cost/m
+	#cost
