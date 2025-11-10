@@ -52,12 +52,12 @@ def w_theta1_gradient_errors(w, b, x_values, y_values):
 		errors.append(error(w, b, x_values[i], y_values[i]) * x_values[i])
 	return errors
 
-# print("errors: %s" % w_theta1_gradient_errors(0, 0, [1, 2, 3, 4], [1, 2, 2.5, 4]))
-
+# print("errors sum: %f" % (sum(w_theta1_gradient_errors(0, 0, [1, 2, 3, 4], [1, 2, 2.5, 4])) / len([1, 2, 3, 4])))
 #Gradient
-# def w_theta1_gradient(w, b):
-	#errors sum
+def w_theta1_gradient(w, b, x_values, y_values):
+	return (sum(w_theta1_gradient_errors(w, b, x_values, y_values)) / len(x_values))
 
+print("gradient: %f" % w_theta1_gradient(0, 0, [1, 2, 3, 4], [1, 2, 2.5, 4]))
 
 #Gradient upate rule
 #cost function
