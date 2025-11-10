@@ -32,16 +32,33 @@ def error(w, b, x, y):
 		return predict.prediction(x, w, b) - y
 print("Error: %d" % error(0, 0, 2, 4))
 
-def all_errors(w, b):
+def calculate_errors(w, b, x_values, y_values):
 	errors = []
-	for i in range(0, len(x_mileage)):
-		errors.append(error(w, b, x_mileage[i], y_price[i]))
-	# print("errors: %s" % errors)
+	for i in range(0, len(x_values)):
+		errors.append(error(w, b, x_values[i], y_values[i]))
 	return errors
 
-all_errors(w_theta1, b_theta0)
-#sum of Errors
+# all_errors(w_theta1, b_theta0)
+def b_theta0_gradient_errors(w, b, x_values, y_values):
+	errors = []
+	for i in range(0, len(x_values)):
+		errors.append(error(w, b, x_values[i], y_values[i]))
+	return errors
+print("errors: %s" % b_theta0_gradient_errors(0, 0, [1, 2, 3, 4], [1, 2, 2.5, 4]))
+
+def w_theta1_gradient_errors(w, b, x_values, y_values):
+	errors = []
+	for i in range(0, len(x_values)):
+		errors.append(error(w, b, x_values[i], y_values[i]) * x_values[i])
+	return errors
+
+# print("errors: %s" % w_theta1_gradient_errors(0, 0, [1, 2, 3, 4], [1, 2, 2.5, 4]))
+
 #Gradient
+# def w_theta1_gradient(w, b):
+	#errors sum
+
+
 #Gradient upate rule
 #cost function
 	#prediction
