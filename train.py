@@ -63,10 +63,27 @@ def b_theta0_gradient(w, b, x_values, y_values):
 
 
 #Gradient upate rule
-def w_theta1_gradient_update(w, b, x_values, y_values):
-	return w - (learning_rate * (w_theta1_gradient(w, b, x_values, y_values)))
+def gradient_update_rule(x_values, y_values):
+	global b_theta0
+	global w_theta1
+	gradient_update = []
 
-print("update: %s" % (w_theta1_gradient_update(0, 0, [1, 2, 3, 4], [1, 2, 2.5, 4])))
+	prev_b_theta0 = b_theta0
+	prev_w_theta1 = w_theta1
+	
+	b_theta0 = b_theta0 - (learning_rate * (b_theta0_gradient(prev_w_theta1, b_theta0, x_values, y_values)))
+	w_theta1 = w_theta1 - (learning_rate * (w_theta1_gradient(w_theta1, prev_b_theta0, x_values, y_values)))
+	gradient_update.append(w_theta1)
+	gradient_update.append(b_theta0)
+	return gradient_update
+
+# def b_theta0_gradient_update(x_values, y_values):
+# 	global b_theta0
+# 	b_theta0 = b_theta0 - (learning_rate * (b_theta0_gradient(w_theta1, b_theta0, x_values, y_values)))
+# 	return b_theta0
+
+print("update w: %s" % (gradient_update_rule([1, 2, 3, 4], [1, 2, 2.5, 4])))
+# print("update b: %s" % (b_theta0_gradient_update([1, 2, 3, 4], [1, 2, 2.5, 4])))
 
 #cost function
 	#prediction
