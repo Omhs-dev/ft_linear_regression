@@ -5,6 +5,7 @@ w_theta1 = 0
 b_theta0 = 0
 x_mileage = 0
 y_price = 0
+learning_rate = 0.1
 dataset = []
 error_list= []
 
@@ -55,11 +56,18 @@ def w_theta1_gradient_errors(w, b, x_values, y_values):
 # print("errors sum: %f" % (sum(w_theta1_gradient_errors(0, 0, [1, 2, 3, 4], [1, 2, 2.5, 4])) / len([1, 2, 3, 4])))
 #Gradient
 def w_theta1_gradient(w, b, x_values, y_values):
-	return (sum(w_theta1_gradient_errors(w, b, x_values, y_values)) / len(x_values))
+	return (sum(w_theta1_gradient_errors(w, b, x_values, y_values)) * 2 / len(x_values))
 
-print("gradient: %f" % w_theta1_gradient(0, 0, [1, 2, 3, 4], [1, 2, 2.5, 4]))
+def b_theta0_gradient(w, b, x_values, y_values):
+	return (sum(b_theta0_gradient_errors(w, b, x_values, y_values)) * 2 / len(x_values))
+
 
 #Gradient upate rule
+def w_theta1_gradient_update(w, b, x_values, y_values):
+	return w - (learning_rate * (w_theta1_gradient(w, b, x_values, y_values)))
+
+print("update: %s" % (w_theta1_gradient_update(0, 0, [1, 2, 3, 4], [1, 2, 2.5, 4])))
+
 #cost function
 	#prediction
 	#errors
