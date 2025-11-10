@@ -1,7 +1,7 @@
 # linear regression
 
 def prediction(mileage, teta0, teta1):
-	return teta0 + teta1 * mileage
+	return float(teta0) + float(teta1) * mileage
 
 def main():
 	w = -0.05
