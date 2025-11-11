@@ -1,6 +1,9 @@
 import json
 import sys
 
+def prediction(mileage, theta0, theta1):
+	return theta0 + theta1 * mileage
+
 def get_thetas():
 	try:
 		with open("values.json", "r") as file:
@@ -33,9 +36,6 @@ def get_mileage():
 		return None
 
 	return mileage
-
-def prediction(mileage, theta0, theta1):
-	return theta0 + theta1 * mileage
 
 def main():
 		try:
