@@ -33,22 +33,28 @@ def get_thetas():
 		return None
 
 def get_mileage():
-	mileage = float(sys.argv[1])
+	try:
+		mileage = float(sys.argv[1])
+	except ValueError:
+		return None
+
 	return mileage
 
-print("mileage: %f" % get_mileage())
-print(isinstance(get_mileage(), float))
 def prediction(mileage, theta0, theta1):
 	return theta0 + theta1 * mileage
 
 def main():
-		if len(sys.argv) <= 2:
-			mileage = get_mileage();
-		theta0, theta1 = get_thetas()
-		print(f"Theta0: {theta0}, Theta1: {theta1}")
+		try:
+			if len(sys.argv) <= 2:
+				mileage = get_mileage();
+				theta0, theta1 = get_thetas()
+				price = prediction(mileage, theta0, theta1)
 
-		price = prediction(mileage, theta0, theta1)
-
-		print("predicted price: %d" % price)
+				print("predicted price: %d" % price)
+		except IndexError:
+			print("No Argument: mileage has not been provided!")
+		except TypeError:
+			print("Error: mileage value is not a valid number")
+			return None
 if __name__ == "__main__":
 	main()
