@@ -32,10 +32,12 @@ def get_thetas():
 def get_mileage():
 	try:
 		mileage = float(sys.argv[1])
+		if mileage < 0:
+			raise Exception
+		return mileage
 	except ValueError:
 		return None
 
-	return mileage
 
 def main():
 		try:
@@ -51,6 +53,9 @@ def main():
 			print("No Argument: mileage has not been provided!")
 		except TypeError:
 			print("Error: mileage value is not a valid number")
+			return None
+		except Exception:
+			print("Please a Positive number!")
 			return None
 if __name__ == "__main__":
 	main()
