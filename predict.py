@@ -1,5 +1,11 @@
 # linear regression
 import json
+import sys
+
+# print("Total arguments:", len(sys.argv))
+# print("Script name:", sys.argv[0])
+# print("Arguments:", sys.argv[1:])
+# print("argv length: %d" % len(sys.argv))
 
 def get_thetas():
 	try:
@@ -8,11 +14,16 @@ def get_thetas():
 			theta0 = read_file.get("Theta0")
 			theta1 = read_file.get("Theta1")
 
-			if not isinstance(theta0, (int)) and isinstance(theta1, (int)):
-				return None
 			if theta0 is None or theta1 is None:
 				print("Error: Theta0 or Theta1 is not found in JSON file")
 				return None
+			try:
+				theta0 = float(theta0)
+				theta1 = float(theta1)
+			except ValueError:
+				print("Error: ThetaO ro Theta 1 is not a valide number")
+				return None
+
 			return (theta0, theta1)
 	except FileNotFoundError:
 		print("Error: file 'value.json' not found")
@@ -21,14 +32,20 @@ def get_thetas():
 		print("Error: failed to decode JSON file")
 		return None
 
+def get_mileage():
+	mileage = float(sys.argv[1])
+	return mileage
+
+print("mileage: %f" % get_mileage())
+print(isinstance(get_mileage(), float))
 def prediction(mileage, theta0, theta1):
 	return theta0 + theta1 * mileage
 
 def main():
+		if len(sys.argv) <= 2:
+			mileage = get_mileage();
 		theta0, theta1 = get_thetas()
 		print(f"Theta0: {theta0}, Theta1: {theta1}")
-
-		mileage = 360000;
 
 		price = prediction(mileage, theta0, theta1)
 
