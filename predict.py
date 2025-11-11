@@ -1,11 +1,5 @@
-# linear regression
 import json
 import sys
-
-# print("Total arguments:", len(sys.argv))
-# print("Script name:", sys.argv[0])
-# print("Arguments:", sys.argv[1:])
-# print("argv length: %d" % len(sys.argv))
 
 def get_thetas():
 	try:
@@ -51,6 +45,8 @@ def main():
 				price = prediction(mileage, theta0, theta1)
 
 				print("predicted price: %d" % price)
+			else:
+				print("Warning: use only one argument")
 		except IndexError:
 			print("No Argument: mileage has not been provided!")
 		except TypeError:
