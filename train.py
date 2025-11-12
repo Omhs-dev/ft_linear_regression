@@ -1,4 +1,5 @@
 import csv
+import pandas as pd
 import predict
 
 w_theta1 = 0
@@ -9,20 +10,38 @@ learning_rate = 0.1
 dataset = []
 error_list= []
 
-with open("data.csv", 'r') as file:
-	csv_reader = csv.reader(file)
+def load_data():
+	try:
+		with open("data.csv", 'r') as file:
+			csv_reader = csv.reader(file)
 
-	next(csv_reader)
-	for line in csv_reader:
-		# print(line)
-		dataset.append([float(value) for value in line])
+			next(csv_reader)
+			for line in csv_reader:
+				# print(line)
+				try:
+					dataset.append([float(value) for value in line])
+				except ValueError:
+					print("Error: value is not a valide number")
+					return None
+			x_mileage = [row[0] for row in dataset]
+			y_price = [row[1] for row in dataset]
 
-x_mileage = [row[0] for row in dataset]
-y_price = [row[1] for row in dataset]
+			return (x_mileage, y_price)
+	except FileNotFoundError:
+		print("Error: file no found")
+		return None
 
-# print("X abcisse: \n %s" % x_mileage)
-# print("Y abcisse: \n %s" % y_price)
+def normalize(data):
+	# value = [34, 2, 54, 63]
 
+	df = pd.DataFrame({'Value': data})
+
+	df['Normalized'] = (df - df.min()) / (df.max() - df.min())
+	print(df)
+
+x_data, y_data = load_data()
+
+normalize(x_data)
 #Derivative
 	#I already have the derivated of dJ/d_theta1 and dJ/d_theta0 based on the formula
 #Prediction
@@ -85,6 +104,8 @@ def gradient_update_rule(x_values, y_values):
 # print("update: %s" % (gradient_update_rule(x_mileage, y_price)))
 # print("update: %f" % (gradient_update_rule(x_mileage, y_price)))
 # print("update b: %s" % (b_theta0_gradient_update([1, 2, 3, 4], [1, 2, 2.5, 4])))
+
+x_mileage, y_price = load_data();
 gradient_update_rule(x_mileage, y_price)
 predicted_price = [predict.prediction(mileage, b_theta0, w_theta1) for mileage in x_mileage]
 print("b: %f" % b_theta0)
