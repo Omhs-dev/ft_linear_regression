@@ -8,6 +8,7 @@ x_mileage = 0
 y_price = 0
 dataset = []
 error_list= []
+tolerance = 0.000001
 
 def load_data():
 	try:
@@ -101,8 +102,8 @@ def gradient_update_rule(x_values, y_values):
 	print("w_theta1: %f" % w_theta1)	
 	return (b_theta0, w_theta1)
 
-x_mileage, y_price = load_data();
-new_theta0, new_theta1 = gradient_update_rule(x_mileage, y_price)
+
+# new_theta0, new_theta1 = gradient_update_rule(x_mileage, y_price)
 # print("b: %f" % new_theta0)
 # print("w: %f" % new_theta1)
 # print("xmileage: %s" % x_mileage)
@@ -133,6 +134,20 @@ def cost_function(w, b, x_values, y_values):
 # 	#sum
 # 	#cost
 
-# cost_function()
+x_values = [1, 2, 3, 4]
+y_values = [1, 2, 2.5, 4]
+
+previous_cost =  cost_function(0, 0, x_values, y_values)
 
 print("cost: %s" % (cost_function(0, 0, [1, 2, 3, 4], [1, 2, 2.5, 4])))
+
+while True:
+	new_theta0, new_theta1 = gradient_update_rule(x_values, y_values)
+	current_cost = cost_function(w_theta1, b_theta0, x_values, y_values)
+
+	if abs(previous_cost - current_cost) < tolerance:
+
+		print("current cost: %f" % previous_cost)
+		break
+	
+	previous_cost = current_cost
