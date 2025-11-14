@@ -1,5 +1,5 @@
 import csv
-# import pandas as pd
+import pandas as pd
 import predict
 
 b_theta0 = 0
@@ -7,8 +7,7 @@ w_theta1 = 0
 x_mileage = 0
 y_price = 0
 dataset = []
-error_list= []
-tolerance = 0.000001
+
 
 def load_data():
 	try:
@@ -31,28 +30,17 @@ def load_data():
 		print("Error: file no found")
 		return None
 
-'''
 def normalize(data):
-	# value = [34, 2, 54, 63]
-
 	df = pd.DataFrame({'Value': data})
-
 	df['Normalized'] = (df - df.min()) / (df.max() - df.min())
-	print(df)
+	return df['Normalized'].tolist()
+
+# def denormalize(data):
 
 x_data, y_data = load_data()
 
-normalize(x_data)
-'''
-#Derivative
-	#I already have the derivated of dJ/d_theta1 and dJ/d_theta0 based on the formula
-#Prediction
-#Errors []
 def error(w, b, x, y):
-# error = pred[i] - y[i]
-# pred = b + wx
 		return predict.prediction(x, w, b) - y
-print("Error: %d" % error(0, 0, 1, 1))
 
 def calculate_errors(w, b, x_values, y_values):
 	errors = []
@@ -85,29 +73,13 @@ def b_theta0_gradient(w, b, x_values, y_values):
 	return (sum(b_theta0_gradient_errors(w, b, x_values, y_values)) / len(x_values))
 
 #Gradient upate rule
-def gradient_update_rule(x_values, y_values):
+def gradient_update_rule(w, b, x_values, y_values):
 	learning_rate = 0.1
-
-	global b_theta0
-	global w_theta1
-
-	prev_b_theta0 = b_theta0
-	prev_w_theta1 = w_theta1
-	print("prev_b_theta0: %f" % prev_b_theta0)
-	print("prev_w_theta1: %f" % prev_w_theta1)
-
-	b_theta0 = b_theta0 - (learning_rate * (b_theta0_gradient(prev_w_theta1, b_theta0, x_values, y_values)))
-	w_theta1 = w_theta1 - (learning_rate * (w_theta1_gradient(w_theta1, prev_b_theta0, x_values, y_values)))
+	b_theta0 = w - (learning_rate * (b_theta0_gradient(w, b, x_values, y_values)))
+	w_theta1 = b - (learning_rate * (w_theta1_gradient(w, b, x_values, y_values)))
 	print("b_theta0: %f" % b_theta0)
 	print("w_theta1: %f" % w_theta1)	
 	return (b_theta0, w_theta1)
-
-
-# new_theta0, new_theta1 = gradient_update_rule(x_mileage, y_price)
-# print("b: %f" % new_theta0)
-# print("w: %f" % new_theta1)
-# print("xmileage: %s" % x_mileage)
-# print("yprice: %s" % y_price)
 
 def squared_error(w, b, x_values, y_values):
 	res = []
@@ -118,36 +90,36 @@ def squared_error(w, b, x_values, y_values):
 def sum_squarred_errors(w, b, x_values, y_values):
 	return sum(squared_error(w, b, x_values, y_values))
 
-print("errors sum: %s" % (squared_error(0, 0, [1, 2, 3, 4], [1, 2, 2.5, 4])))
-print("sum errors sum: %s" % (sum_squarred_errors(0, 0, [1, 2, 3, 4], [1, 2, 2.5, 4])))
-
 #cost function
 def cost_function(w, b, x_values, y_values):
-	cost = 0
-
 	cost = 1/(2 *len(x_values)) * sum_squarred_errors(w, b, x_values, y_values)
 	return cost
-	#prediction
-	
-# 	#errors
-# 	#squared errors
-# 	#sum
-# 	#cost
 
 x_values = [1, 2, 3, 4]
 y_values = [1, 2, 2.5, 4]
 
-previous_cost =  cost_function(0, 0, x_values, y_values)
+scaled_x = normalize(x_values)
+scaled_y = normalize(y_values)
+print("scaled_x: %s" % scaled_x)
+print("scaled_y: %s" % scaled_y)
 
-print("cost: %s" % (cost_function(0, 0, [1, 2, 3, 4], [1, 2, 2.5, 4])))
+previous_cost = cost_function(w_theta1, b_theta0, x_values, y_values)
+print("cost: %s" % previous_cost)
 
-while True:
-	new_theta0, new_theta1 = gradient_update_rule(x_values, y_values)
-	current_cost = cost_function(w_theta1, b_theta0, x_values, y_values)
+max_iterations = 1000
+iteration = 0
+tolerence = 0.000001
 
-	if abs(previous_cost - current_cost) < tolerance:
+while iteration < max_iterations:
+	print("Interation: ", iteration)
+	w_theta1, b_theta0 = gradient_update_rule(w_theta1, b_theta0, scaled_x, scaled_y)
+	current_cost = cost_function(w_theta1, b_theta0, scaled_x, scaled_y)
 
-		print("current cost: %f" % previous_cost)
+	if (previous_cost - current_cost) < tolerence:
+		print("Converged at iteration %d" % iteration)
 		break
-	
+
 	previous_cost = current_cost
+	print("current cost1: %f" % previous_cost)
+
+	iteration += 1
