@@ -1,4 +1,5 @@
 import csv
+import json
 import pandas as pd
 import predict
 
@@ -35,9 +36,9 @@ def denormalize(theta0, theta1, x_data, y_data):
 	dernorm_t1 = theta1 * ((max(y_data) - min(y_data)) / (max(x_data) - min(x_data)))
 	dernorm_t0 = theta0 * ((max(y_data) - min(y_data))) + min(y_data) - dernorm_t1 * min(x_data)
 	print(f"uns_t0: {dernorm_t0} and uns_t1: {dernorm_t1}")
-	return dernorm_t0, dernorm_t1
+	return float(dernorm_t0), float(dernorm_t1)
 
-denormalize(0.026628, 0.021137, [1, 2, 3, 4], [1, 2, 2.5, 4])
+denormalize(0.27991881046254985, 0.31875607394238736, [1, 2, 3, 4], [1, 2, 2.5, 4])
 
 x_data, y_data = load_data()
 
@@ -106,9 +107,21 @@ def cost_function(w, b, x_values, y_values):
 # prev_cost1 = cost_function(0, 0, [1, 2, 3, 4], [1, 2, 2.5, 4])
 # print("cost check: %s" % prev_cost1)
 
+def set_thetas(theta0, theta1):
+	try:
+		with open("values.json", "w") as json_file:
+			json.dump({"Theta0": theta0, "Theta1": theta1}, json_file)
+
+	except FileNotFoundError:
+		print("Error: file 'value.json' not found")
+		return None
+	except json.JSONDecodeError:
+		print("Error: failed to decode JSON file")
+		return None
+
 def launch_train(theta1, theta0, x_values, y_values):
 	iteration = 0
-	max_iterations = 6
+	max_iterations = 1000
 	tolerence = 0.000001
 	prev_cost = cost_function(theta1, theta0, x_values, y_values)
 	print("cost: %s" % prev_cost)
@@ -120,13 +133,13 @@ def launch_train(theta1, theta0, x_values, y_values):
 
 		if (prev_cost - curr_cost) < tolerence:
 			print("Converged at iteration %d" % iteration)
-			break
+			return theta0, theta1
+			# break
 
 		prev_cost = curr_cost
 		print("current cost1: %f" % prev_cost)
 
 		iteration += 1
-
 
 def main():
 	theta0 = 0
@@ -142,7 +155,13 @@ def main():
 		print("scaled_x: %s" % scaled_x)
 		print("scaled_y: %s" % scaled_y)
 
-		launch_train(theta1, theta0, scaled_x, scaled_y)
+		new_theta0, new_theta1 = launch_train(theta1, theta0, scaled_x, scaled_y)
+		print(f"new theta0: {new_theta0} and new theta1: {new_theta1}")
+
+		t0, t1 = denormalize(new_theta0, new_theta1, x_values, y_values)
+		print(f"new theta0: {t0} and new theta1: {t1}")
+
+		set_thetas(t0, t1)
 	except TypeError:
 		print("Error")
 		return None
@@ -152,7 +171,6 @@ def main():
 	except UnboundLocalError:
 		print("Error: Incorrect assignment")
 		return None
-	
 
 if __name__ == "__main__":
 	main()
