@@ -1,6 +1,8 @@
-import csv
-import json
 import pandas as pd
+import matplotlib.pyplot as plt
+import json
+import csv
+
 import predict
 
 def load_data():
@@ -147,23 +149,28 @@ def main():
 		x_values = [1, 2, 3, 4]
 		y_values = [1, 2, 2.5, 4]
 
-		x_mileage, y_price = load_data()
+		print("x values: ", x_values)
+		print("y values: ", y_values)
 
-		# print("mileage: ", x_mileage)
-		# print("price: ", y_price)
+		plt.scatter(x_values, y_values, color='red', label='Data Points')
+		plt.show()
+		# x_mileage, y_price = load_data()
 
-		scaled_mileage = normalize(x_mileage)
-		scaled_price = normalize(y_price)
-		print("scaled_mileage: %s" % scaled_mileage)
-		print("scaled_price: %s" % scaled_price)
+		# # print("mileage: ", x_mileage)
+		# # print("price: ", y_price)
 
-		new_theta0, new_theta1 = launch_train(theta1, theta0, scaled_mileage, scaled_price)
-		print(f"new scaled theta0: {new_theta0} and new scaled theta1: {new_theta1}")
+		# scaled_mileage = normalize(x_mileage)
+		# scaled_price = normalize(y_price)
+		# print("scaled_mileage: %s" % scaled_mileage)
+		# print("scaled_price: %s" % scaled_price)
 
-		t0, t1 = denormalize(new_theta0, new_theta1, x_mileage, y_price)
-		print(f"new theta0: {t0} and new theta1: {t1}")
+		# new_theta0, new_theta1 = launch_train(theta1, theta0, scaled_mileage, scaled_price)
+		# print(f"new scaled theta0: {new_theta0} and new scaled theta1: {new_theta1}")
 
-		set_thetas(t0, t1)
+		# t0, t1 = denormalize(new_theta0, new_theta1, x_mileage, y_price)
+		# print(f"new theta0: {t0} and new theta1: {t1}")
+
+		# set_thetas(t0, t1)
 	except TypeError:
 		print("Error")
 		return None
