@@ -35,7 +35,6 @@ def normalize(data):
 def denormalize(theta0, theta1, x_data, y_data):
 	dernorm_t1 = theta1 * ((max(y_data) - min(y_data)) / (max(x_data) - min(x_data)))
 	dernorm_t0 = theta0 * ((max(y_data) - min(y_data))) + min(y_data) - dernorm_t1 * min(x_data)
-	print(f"uns_t0: {dernorm_t0} and uns_t1: {dernorm_t1}")
 	return float(dernorm_t0), float(dernorm_t1)
 
 denormalize(0.27991881046254985, 0.31875607394238736, [1, 2, 3, 4], [1, 2, 2.5, 4])
@@ -145,20 +144,23 @@ def main():
 	theta0 = 0
 	theta1 = 0
 	try:
-		print("this the main")
-
 		x_values = [1, 2, 3, 4]
 		y_values = [1, 2, 2.5, 4]
 
-		scaled_x = normalize(x_values)
-		scaled_y = normalize(y_values)
-		print("scaled_x: %s" % scaled_x)
-		print("scaled_y: %s" % scaled_y)
+		x_mileage, y_price = load_data()
 
-		new_theta0, new_theta1 = launch_train(theta1, theta0, scaled_x, scaled_y)
-		print(f"new theta0: {new_theta0} and new theta1: {new_theta1}")
+		# print("mileage: ", x_mileage)
+		# print("price: ", y_price)
 
-		t0, t1 = denormalize(new_theta0, new_theta1, x_values, y_values)
+		scaled_mileage = normalize(x_mileage)
+		scaled_price = normalize(y_price)
+		print("scaled_mileage: %s" % scaled_mileage)
+		print("scaled_price: %s" % scaled_price)
+
+		new_theta0, new_theta1 = launch_train(theta1, theta0, scaled_mileage, scaled_price)
+		print(f"new scaled theta0: {new_theta0} and new scaled theta1: {new_theta1}")
+
+		t0, t1 = denormalize(new_theta0, new_theta1, x_mileage, y_price)
 		print(f"new theta0: {t0} and new theta1: {t1}")
 
 		set_thetas(t0, t1)
