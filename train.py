@@ -2,12 +2,9 @@ import csv
 import pandas as pd
 import predict
 
-b_theta0 = 0
-w_theta1 = 0
 x_mileage = 0
 y_price = 0
 dataset = []
-
 
 def load_data():
 	try:
@@ -73,13 +70,13 @@ def b_theta0_gradient(w, b, x_values, y_values):
 	return (sum(b_theta0_gradient_errors(w, b, x_values, y_values)) / len(x_values))
 
 #Gradient upate rule
-def gradient_update_rule(w, b, x_values, y_values):
-	learning_rate = 0.1
-	b_theta0 = w - (learning_rate * (b_theta0_gradient(w, b, x_values, y_values)))
-	w_theta1 = b - (learning_rate * (w_theta1_gradient(w, b, x_values, y_values)))
-	print("b_theta0: %f" % b_theta0)
-	print("w_theta1: %f" % w_theta1)	
-	return (b_theta0, w_theta1)
+def gradient_update_rule(theta1, theta0, x_values, y_values):
+	learning_rate = 0.01
+	theta0 = theta0 - (learning_rate * (b_theta0_gradient(theta1, theta0, x_values, y_values)))
+	theta1 = theta1 - (learning_rate * (w_theta1_gradient(theta1, theta0, x_values, y_values)))
+	print("b_theta0: %f" % theta0)
+	print("w_theta1: %f" % theta1)	
+	return (theta0, theta1)
 
 def squared_error(w, b, x_values, y_values):
 	res = []
@@ -94,32 +91,56 @@ def sum_squarred_errors(w, b, x_values, y_values):
 def cost_function(w, b, x_values, y_values):
 	cost = 1/(2 *len(x_values)) * sum_squarred_errors(w, b, x_values, y_values)
 	return cost
+prev_cost1 = cost_function(0, 0, [1, 2, 3, 4], [1, 2, 2.5, 4])
+print("cost check: %s" % prev_cost1)
 
-x_values = [1, 2, 3, 4]
-y_values = [1, 2, 2.5, 4]
+def launch_train(theta1, theta0, x_values, y_values):
+	iteration = 0
+	max_iterations = 1000
+	tolerence = 0.000001
+	prev_cost = cost_function(theta1, theta0, x_values, y_values)
+	print("cost: %s" % prev_cost)
 
-scaled_x = normalize(x_values)
-scaled_y = normalize(y_values)
-print("scaled_x: %s" % scaled_x)
-print("scaled_y: %s" % scaled_y)
+	while iteration < max_iterations:
+		print("Interation: ", iteration)
+		theta1, theta0 = gradient_update_rule(theta1, theta0, x_values, y_values)
+		curr_cost = cost_function(theta1, theta0, x_values, y_values)
 
-previous_cost = cost_function(w_theta1, b_theta0, x_values, y_values)
-print("cost: %s" % previous_cost)
+		if (prev_cost - curr_cost) < tolerence:
+			print("Converged at iteration %d" % iteration)
+			break
 
-max_iterations = 1000
-iteration = 0
-tolerence = 0.000001
+		prev_cost = curr_cost
+		print("current cost1: %f" % prev_cost)
 
-while iteration < max_iterations:
-	print("Interation: ", iteration)
-	w_theta1, b_theta0 = gradient_update_rule(w_theta1, b_theta0, scaled_x, scaled_y)
-	current_cost = cost_function(w_theta1, b_theta0, scaled_x, scaled_y)
+		iteration += 1
 
-	if (previous_cost - current_cost) < tolerence:
-		print("Converged at iteration %d" % iteration)
-		break
 
-	previous_cost = current_cost
-	print("current cost1: %f" % previous_cost)
+def main():
+	b_theta0 = 0
+	w_theta1 = 0
+	try:
+		print("this the main")
 
-	iteration += 1
+		x_values = [1, 2, 3, 4]
+		y_values = [1, 2, 2.5, 4]
+
+		scaled_x = normalize(x_values)
+		scaled_y = normalize(y_values)
+		print("scaled_x: %s" % scaled_x)
+		print("scaled_y: %s" % scaled_y)
+
+		launch_train(w_theta1, b_theta0, scaled_x, scaled_y)
+	except TypeError:
+		print("Error")
+		return None
+	except None:
+		print("Error")
+		return None
+	except UnboundLocalError:
+		print("Error: Incorrect assignment")
+		return None
+	
+
+if __name__ == "__main__":
+	main()
