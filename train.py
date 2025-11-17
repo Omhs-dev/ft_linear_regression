@@ -148,10 +148,14 @@ def main():
 	try:
 		x_values = [1, 2, 3, 4]
 		y_values = [1, 2, 2.5, 4]
+		b = 0
+		w = 0
 
 		print("x values: ", x_values)
 		print("y values: ", y_values)
 
+		regression_line = [w * x + b for x in x_values]
+		plt.plot(x_values, regression_line, color='blue', label='Regression Line')
 		plt.scatter(x_values, y_values, color='red', label='Data Points')
 		plt.show()
 		# x_mileage, y_price = load_data()
