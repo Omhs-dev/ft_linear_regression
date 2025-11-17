@@ -31,7 +31,13 @@ def normalize(data):
 	df['Normalized'] = (df - df.min()) / (df.max() - df.min())
 	return df['Normalized'].tolist()
 
-# def denormalize(data):
+def denormalize(theta0, theta1, x_data, y_data):
+	dernorm_t1 = theta1 * ((max(y_data) - min(y_data)) / (max(x_data) - min(x_data)))
+	dernorm_t0 = theta0 * ((max(y_data) - min(y_data))) + min(y_data) - dernorm_t1 * min(x_data)
+	print(f"uns_t0: {dernorm_t0} and uns_t1: {dernorm_t1}")
+	return dernorm_t0, dernorm_t1
+
+denormalize(0.026628, 0.021137, [1, 2, 3, 4], [1, 2, 2.5, 4])
 
 x_data, y_data = load_data()
 
