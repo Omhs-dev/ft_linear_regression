@@ -31,12 +31,14 @@ def load_data():
 
 def normalize(data):
 	df = pd.DataFrame({'Value': data})
-	df['Normalized'] = (df - df.min()) / (df.max() - df.min())
+	df['Normalized'] = (df["Value"] - df["Value"].min()) / (df["Value"].max() - df["Value"].min())
 	return df['Normalized'].tolist()
 
 def denormalize(theta0, theta1, x_data, y_data):
-	dernorm_t1 = theta1 * ((max(y_data) - min(y_data)) / (max(x_data) - min(x_data)))
-	dernorm_t0 = theta0 * ((max(y_data) - min(y_data))) + min(y_data) - dernorm_t1 * min(x_data)
+	x_range = max(x_data) - min(x_data)
+	y_range = max(y_data) - min(y_data)
+	dernorm_t1 = theta1 * ( y_range / x_range)
+	dernorm_t0 = theta0 * (y_range) + min(y_data) - dernorm_t1 * min(x_data)
 	return float(dernorm_t0), float(dernorm_t1)
 
 denormalize(0.27991881046254985, 0.31875607394238736, [1, 2, 3, 4], [1, 2, 2.5, 4])
@@ -80,13 +82,13 @@ def b_theta0_gradient(w, b, x_values, y_values):
 
 #Gradient upate rule
 def gradient_update_rule(theta1, theta0, x_values, y_values):
-	delta_lr = 0.01
+	delta_lr = 0.1
 	theta1_grad = w_theta1_gradient(theta1, theta0, x_values, y_values)
 	theta0_grad = b_theta0_gradient(theta1, theta0, x_values, y_values)
 	theta0 = theta0 - (delta_lr * theta0_grad)
 	theta1 = theta1 - (delta_lr * theta1_grad)
-	print("b_theta0: %f" % theta0)
-	print("w_theta1: %f" % theta1)	
+	# print("b_theta0: %f" % theta0)
+	# print("w_theta1: %f" % theta1)	
 	return (theta0, theta1)
 # t1, t0 = (gradient_update_rule(0, 0, [1, 2, 3, 4], [1, 2, 2.5, 4]))
 # print(f"t1: {t1} and t0: {t0}")
@@ -121,60 +123,56 @@ def set_thetas(theta0, theta1):
 		return None
 
 def launch_train(theta1, theta0, x_values, y_values):
-	iteration = 0
 	max_iterations = 1000
-	tolerence = 0.000001
+	tolerence = 1e-6
+	tol = 10**-7
+	verbose = True
 	prev_cost = cost_function(theta1, theta0, x_values, y_values)
-	print("cost: %s" % prev_cost)
+	if verbose:
+		print("Initial Cost: %s" % prev_cost)
 
-	while iteration < max_iterations:
-		print("Interation: ", iteration)
+	cost_history = [prev_cost]
+	for i in range(max_iterations):
+		# print("Interation: ", i)
 		theta0, theta1 = gradient_update_rule(theta1, theta0, x_values, y_values)
 		curr_cost = cost_function(theta1, theta0, x_values, y_values)
+		cost_history.append(curr_cost)
 
-		if (prev_cost - curr_cost) < tolerence:
-			print("Converged at iteration %d" % iteration)
-			return theta0, theta1
-			# break
+		if abs(prev_cost - curr_cost) < tol:
+			if verbose:
+				print("Converged at iteration %d" % i)
+			return theta0, theta1, cost_history
 
 		prev_cost = curr_cost
-		print("current cost1: %f" % prev_cost)
 
-		iteration += 1
+		if verbose and i % 100 == 0:
+			print(f"Iteration {i}: cost = {curr_cost}\ntheat0 = {theta0}\ntheta1 = {theta1}")
+	if verbose:
+		print("Reached max iteration")
+		print(f"Final Cost: {curr_cost}")
+	return theta0, theta1, cost_history
 
 def main():
 	theta0 = 0
 	theta1 = 0
 	try:
-		x_values = [1, 2, 3, 4]
-		y_values = [1, 2, 2.5, 4]
-		b = 0
-		w = 0
+		x_mileage, y_price = load_data()
 
-		print("x values: ", x_values)
-		print("y values: ", y_values)
+		# print("mileage: ", x_mileage)
+		# print("price: ", y_price)
 
-		regression_line = [w * x + b for x in x_values]
-		plt.plot(x_values, regression_line, color='blue', label='Regression Line')
-		plt.scatter(x_values, y_values, color='red', label='Data Points')
-		plt.show()
-		# x_mileage, y_price = load_data()
-
-		# # print("mileage: ", x_mileage)
-		# # print("price: ", y_price)
-
-		# scaled_mileage = normalize(x_mileage)
-		# scaled_price = normalize(y_price)
+		scaled_mileage = normalize(x_mileage)
+		scaled_price = normalize(y_price)
 		# print("scaled_mileage: %s" % scaled_mileage)
 		# print("scaled_price: %s" % scaled_price)
 
-		# new_theta0, new_theta1 = launch_train(theta1, theta0, scaled_mileage, scaled_price)
-		# print(f"new scaled theta0: {new_theta0} and new scaled theta1: {new_theta1}")
+		new_theta0, new_theta1, cost_history = launch_train(theta1, theta0, scaled_mileage, scaled_price)
+		print(f"new scaled theta0: {new_theta0} and new scaled theta1: {new_theta1}")
 
-		# t0, t1 = denormalize(new_theta0, new_theta1, x_mileage, y_price)
-		# print(f"new theta0: {t0} and new theta1: {t1}")
+		t0, t1 = denormalize(new_theta0, new_theta1, x_mileage, y_price)
+		print(f"new theta0: {t0} and new theta1: {t1}")
 
-		# set_thetas(t0, t1)
+		set_thetas(t0, t1)
 	except TypeError:
 		print("Error")
 		return None
