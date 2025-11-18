@@ -123,9 +123,8 @@ def set_thetas(theta0, theta1):
 		return None
 
 def launch_train(theta1, theta0, x_values, y_values):
-	max_iterations = 1000
+	max_iterations = 300
 	tolerence = 1e-6
-	tol = 10**-7
 	verbose = True
 	prev_cost = cost_function(theta1, theta0, x_values, y_values)
 	if verbose:
@@ -138,12 +137,12 @@ def launch_train(theta1, theta0, x_values, y_values):
 		curr_cost = cost_function(theta1, theta0, x_values, y_values)
 		cost_history.append(curr_cost)
 
-		if abs(prev_cost - curr_cost) < tol:
-			if verbose:
-				print("Converged at iteration %d" % i)
-			return theta0, theta1, cost_history
+		# if (prev_cost - curr_cost) < 0:
+		# 	if verbose:
+		# 		print("Converged at iteration %d" % i)
+		# 	return theta0, theta1, cost_history
 
-		prev_cost = curr_cost
+		# prev_cost = curr_cost
 
 		if verbose and i % 100 == 0:
 			print(f"Iteration {i}: cost = {curr_cost}\ntheat0 = {theta0}\ntheta1 = {theta1}")
