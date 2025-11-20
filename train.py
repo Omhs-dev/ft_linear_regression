@@ -45,7 +45,7 @@ def denormalize(theta0, theta1, x_data, y_data):
 # x_data, y_data = load_data()
 
 def error(w, b, x, y):
-		return predict.prediction(x, w, b) - y
+	return (b + w*x) - y
 
 def w_theta1_gradient(w, b, x_values, y_values):
 	m = len(x_values)
@@ -53,7 +53,6 @@ def w_theta1_gradient(w, b, x_values, y_values):
 	for i in range(0, len(x_values)):
 		errors_sum += error(w, b, x_values[i], y_values[i]) * x_values[i]
 	return (1/m) * errors_sum
-	# return (sum(w_theta1_gradient_errors(w, b, x_values, y_values)) / len(x_values))
 
 # print("w grad: %f" % (w_theta1_gradient(0, 0, [1, 2, 3, 4], [1, 2, 2.5, 4])))
 
@@ -63,11 +62,10 @@ def b_theta0_gradient(w, b, x_values, y_values):
 	for i in range(0, len(x_values)):
 		errors_sum += error(w, b, x_values[i], y_values[i])
 	return errors_sum/m
-	# return (sum(b_theta0_gradient_errors(w, b, x_values, y_values)) / len(x_values))
 
 #Gradient upate rule
 def gradient_update_rule(theta1, theta0, x_values, y_values):
-	delta_lr = 0.01
+	delta_lr = 0.1
 	theta1_grad = w_theta1_gradient(theta1, theta0, x_values, y_values)
 	theta0_grad = b_theta0_gradient(theta1, theta0, x_values, y_values)
 	theta0 -= (delta_lr * theta0_grad)
@@ -102,7 +100,7 @@ def set_thetas(theta0, theta1):
 		return None
 
 def launch_train(theta1, theta0, x_values, y_values):
-	max_iterations = 1000
+	max_iterations = 10
 	tolerance = 1e-7
 	verbose = True
 
@@ -112,10 +110,8 @@ def launch_train(theta1, theta0, x_values, y_values):
 
 	cost_history = [prev_cost]
 	print("Iter	|   	Theta1		|   	Theta0		|		Cost	|")
-	for i in range(max_iterations):
+	for i in range(max_iterations+1):
 		theta0, theta1 = gradient_update_rule(theta1, theta0, x_values, y_values)
-		theta1_grad = w_theta1_gradient(theta1, theta0, x_values, y_values)
-		theta0_grad = b_theta0_gradient(theta1, theta0, x_values, y_values)
 		curr_cost = cost_function(theta1, theta0, x_values, y_values)
 		cost_history.append(curr_cost)
 
@@ -152,7 +148,7 @@ def main():
 
 		t0, t1 = denormalize(new_theta0, new_theta1, x_values, y_values)
 		print(f"theta1_norm		|	theta0_norm		|	theta1_denorm		|	theta0_denorm		")
-		print(f"{new_theta1} 	| 	{new_theta0} 	| 	{t1}	|	{t0}")
+		print(f"{new_theta1:11.8f} 	| 	{new_theta0} 	| 	{t1}	|	{t0}")
 
 		# set_thetas(t0, t1)
 	except TypeError:
