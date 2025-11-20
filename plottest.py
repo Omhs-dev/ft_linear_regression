@@ -57,6 +57,7 @@ def gradients_norm(w, b):
         y_pred = w * xi + b
         dw += (y_pred - yi) * xi
         db += (y_pred - yi)
+        print(f"error: {y_pred} -- dw: {dw} -- db: {db}")
     return dw / m, db / m
 
 # gradient descent parameters
@@ -84,11 +85,13 @@ for it in range(max_iter + 1):  # include iteration 0..50
 
     # batch update
     dw, db = gradients_norm(w, b)
+    print(f"gradient w: {dw} -- gradient b: {db}")
     w = w - lr * dw
     b = b - lr * db
+    print(f"new w: {w} - new b: {b} - w_denorm: {W} - b_denorm: {B}")
 
 # Print nicely
-print("Iter |   w_norm    |   b_norm    | cost_norm  |  W_denorm   |  B_denorm   | cost_orig")
-print("-" * 85)
-for it, w, b, cost_norm, W, B, cost_orig in rows:
-    print(f"{it:4d} | {w:11.8f} | {b:11.8f} | {cost_norm:10.8f} | {W:11.8f} | {B:11.8f} | {cost_orig:10.8f}")
+# print("Iter |   w_norm    |   b_norm    | cost_norm  |  W_denorm   |  B_denorm   | cost_orig")
+# print("-" * 85)
+# for it, w, b, cost_norm, W, B, cost_orig in rows:
+#     print(f"{it:4d} | {w:11.8f} | {b:11.8f} | {cost_norm:10.8f} | {W:11.8f} | {B:11.8f} | {cost_orig:10.8f}")

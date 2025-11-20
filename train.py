@@ -35,16 +35,16 @@ def normalize(data):
 	return df['Normalized'].tolist()
 
 def denormalize(theta0, theta1, x_data, y_data):
-	df = pd.DataFrame({'x': x_data, 'y' : y_data})
-	df['x_range'] = df['x'].max() - df["x"].min()
-	df['y_range'] = df['y'].max() - df['y'].min()
-	df['Theta1_denorm'] = theta1 * (df["y_range"] / df["x_range"])
-	df['Theta0_denorm'] = theta0 * (df["y_range"]) + df["y"].min() - df["Theta1_denorm"] * df["x"].min()
-	return (float(df["Theta0_denorm"].iloc[0]), float(df["Theta1_denorm"].iloc[0]))
+	x_range = max(x_data) - min(x_data)
+	y_range = max(y_data) - min(y_data)
+	dernorm_t1 = theta1 * ( y_range / x_range)
+	dernorm_t0 = theta0 * (y_range) + min(y_data) - dernorm_t1 * min(x_data)
+	return float(dernorm_t0), float(dernorm_t1)
 
 # x_data, y_data = load_data()
 
 def error(w, b, x, y):
+	print(f"error: {(b + w*x) - y}")
 	return (b + w*x) - y
 
 def w_theta1_gradient(w, b, x_values, y_values):
@@ -61,17 +61,18 @@ def b_theta0_gradient(w, b, x_values, y_values):
 	errors_sum = 0
 	for i in range(0, len(x_values)):
 		errors_sum += error(w, b, x_values[i], y_values[i])
-	return errors_sum/m
+	print(f"errors_sum: {errors_sum}")
+	return (1/m) *errors_sum
 
 #Gradient upate rule
 def gradient_update_rule(theta1, theta0, x_values, y_values):
 	delta_lr = 0.1
 	theta1_grad = w_theta1_gradient(theta1, theta0, x_values, y_values)
 	theta0_grad = b_theta0_gradient(theta1, theta0, x_values, y_values)
+	print("theta1_grad: %f" % theta1_grad)
+	print("theta0_grad: %f" % theta0_grad)	
 	theta0 -= (delta_lr * theta0_grad)
 	theta1 -= (delta_lr * theta1_grad)
-	# print("b_theta0: %f" % theta0)
-	# print("w_theta1: %f" % theta1)	
 	return (theta0, theta1)
 
 def squared_error(w, b, x_values, y_values):
@@ -109,15 +110,13 @@ def launch_train(theta1, theta0, x_values, y_values):
 		print("Initial Cost: %s" % prev_cost)
 
 	cost_history = [prev_cost]
-	print("Iter	|   	Theta1		|   	Theta0		|		Cost	|")
+	# print("Iter	|   	Theta1		|   	Theta0		|		Cost	|")
 	for i in range(max_iterations+1):
-		theta0, theta1 = gradient_update_rule(theta1, theta0, x_values, y_values)
 		curr_cost = cost_function(theta1, theta0, x_values, y_values)
 		cost_history.append(curr_cost)
 
-		prev_cost = curr_cost
-
-		print(f"{i}	|	{theta1}	| {theta0}	|	{curr_cost}	|")
+		theta0, theta1 = gradient_update_rule(theta1, theta0, x_values, y_values)
+		# print(f"{i}	|	{theta1}	| {theta0}	|	{curr_cost}	|")
 		# if verbose and i % 100 == 0:
 			# print(f"Iteration {i}: cost = {curr_cost}\ntheat0 = {theta0}\ntheta1 = {theta1}")
 	print(f"Curr_cost: {curr_cost}")
