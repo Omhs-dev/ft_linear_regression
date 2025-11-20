@@ -40,19 +40,12 @@ def denormalize(theta0, theta1, x_data, y_data):
 	df['y_range'] = df['y'].max() - df['y'].min()
 	df['Theta1_denorm'] = theta1 * (df["y_range"] / df["x_range"])
 	df['Theta0_denorm'] = theta0 * (df["y_range"]) + df["y"].min() - df["Theta1_denorm"] * df["x"].min()
-	# print(df)
 	return (float(df["Theta0_denorm"].iloc[0]), float(df["Theta1_denorm"].iloc[0]))
 
-x_data, y_data = load_data()
+# x_data, y_data = load_data()
 
 def error(w, b, x, y):
 		return predict.prediction(x, w, b) - y
-
-def calculate_errors(w, b, x_values, y_values):
-	errors = []
-	for i in range(0, len(x_values)):
-		errors.append(error(w, b, x_values[i], y_values[i]))
-	return errors
 
 def b_theta0_gradient_errors(w, b, x_values, y_values):
 	errors = []
