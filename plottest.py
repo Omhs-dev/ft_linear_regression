@@ -63,7 +63,7 @@ def gradients_norm(w, b):
 w = 0.0   # normalized theta1
 b = 0.0   # normalized theta0
 lr = 0.01
-max_iter = 300
+max_iter = 1000
 
 rows = []
 for it in range(max_iter + 1):  # include iteration 0..50

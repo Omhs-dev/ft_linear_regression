@@ -47,48 +47,46 @@ def denormalize(theta0, theta1, x_data, y_data):
 def error(w, b, x, y):
 		return predict.prediction(x, w, b) - y
 
-def b_theta0_gradient_errors(w, b, x_values, y_values):
-	errors = []
-	for i in range(0, len(x_values)):
-		errors.append(error(w, b, x_values[i], y_values[i]))
-	return errors
-
-def w_theta1_gradient_errors(w, b, x_values, y_values):
-	errors = []
-	for i in range(0, len(x_values)):
-		errors.append(error(w, b, x_values[i], y_values[i]) * x_values[i])
-	return errors
-
 def w_theta1_gradient(w, b, x_values, y_values):
-	return (sum(w_theta1_gradient_errors(w, b, x_values, y_values)) / len(x_values))
+	m = len(x_values)
+	errors_sum = 0
+	for i in range(0, len(x_values)):
+		errors_sum += error(w, b, x_values[i], y_values[i]) * x_values[i]
+	return (1/m) * errors_sum
+	# return (sum(w_theta1_gradient_errors(w, b, x_values, y_values)) / len(x_values))
 
 # print("w grad: %f" % (w_theta1_gradient(0, 0, [1, 2, 3, 4], [1, 2, 2.5, 4])))
 
 def b_theta0_gradient(w, b, x_values, y_values):
-	return (sum(b_theta0_gradient_errors(w, b, x_values, y_values)) / len(x_values))
+	m = len(x_values)
+	errors_sum = 0
+	for i in range(0, len(x_values)):
+		errors_sum += error(w, b, x_values[i], y_values[i])
+	return errors_sum/m
+	# return (sum(b_theta0_gradient_errors(w, b, x_values, y_values)) / len(x_values))
 
 #Gradient upate rule
 def gradient_update_rule(theta1, theta0, x_values, y_values):
 	delta_lr = 0.01
 	theta1_grad = w_theta1_gradient(theta1, theta0, x_values, y_values)
 	theta0_grad = b_theta0_gradient(theta1, theta0, x_values, y_values)
-	theta0 = theta0 - (delta_lr * theta0_grad)
-	theta1 = theta1 - (delta_lr * theta1_grad)
+	theta0 -= (delta_lr * theta0_grad)
+	theta1 -= (delta_lr * theta1_grad)
 	# print("b_theta0: %f" % theta0)
 	# print("w_theta1: %f" % theta1)	
 	return (theta0, theta1)
-# t1, t0 = (gradient_update_rule(0, 0, [1, 2, 3, 4], [1, 2, 2.5, 4]))
-# print(f"t1: {t1} and t0: {t0}")
 
 def squared_error(w, b, x_values, y_values):
-	res = []
+	res = 0
 	for i in range(0, len(x_values)):
-		res.append((error(w, b, x_values[i], y_values[i]))**2)
+		res += ((error(w, b, x_values[i], y_values[i]))**2)
 	return res
 
 #cost function
 def cost_function(w, b, x_values, y_values):
-	cost = (1/(2 * len(x_values))) * (sum(squared_error(w, b, x_values, y_values)))
+	m = len(x_values)
+	sq_err_sum = squared_error(w, b, x_values, y_values)
+	cost = (1/(2 * m)) * sq_err_sum
 	return cost
 
 def set_thetas(theta0, theta1):
@@ -104,11 +102,9 @@ def set_thetas(theta0, theta1):
 		return None
 
 def launch_train(theta1, theta0, x_values, y_values):
-	max_iterations = 10
+	max_iterations = 1000
 	tolerance = 1e-7
 	verbose = True
-	patience = 5
-	bad_steps = 0
 
 	prev_cost = cost_function(theta1, theta0, x_values, y_values)
 	if verbose:
@@ -139,10 +135,10 @@ def main():
 	theta1 = 0
 	try:
 		x_mileage, y_price = load_data()
-		x_values = [1, 2, 3, 4]
-		y_values = [1, 2, 2.5, 4]
-		# x_values = [240000.0, 139800.0, 150500.0, 185530.0, 176000.0, 114800.0, 166800.0, 89000.0, 144500.0, 84000.0, 82029.0, 63060.0, 74000.0, 97500.0, 67000.0, 76025.0, 48235.0, 93000.0, 60949.0, 65674.0, 54000.0, 68500.0, 22899.0, 61789.0]
-		# y_values = [3650.0, 3800.0, 4400.0, 4450.0, 5250.0, 5350.0, 5800.0, 5990.0, 5999.0, 6200.0, 6390.0, 6390.0, 6600.0, 6800.0, 6800.0, 6900.0, 6900.0, 6990.0, 7490.0, 7555.0, 7990.0, 7990.0, 7990.0, 8290.0]
+		# x_values = [1, 2, 3, 4]
+		# y_values = [1, 2, 2.5, 4]
+		x_values = [240000.0, 139800.0, 150500.0, 185530.0, 176000.0, 114800.0, 166800.0, 89000.0, 144500.0, 84000.0, 82029.0, 63060.0, 74000.0, 97500.0, 67000.0, 76025.0, 48235.0, 93000.0, 60949.0, 65674.0, 54000.0, 68500.0, 22899.0, 61789.0]
+		y_values = [3650.0, 3800.0, 4400.0, 4450.0, 5250.0, 5350.0, 5800.0, 5990.0, 5999.0, 6200.0, 6390.0, 6390.0, 6600.0, 6800.0, 6800.0, 6900.0, 6900.0, 6990.0, 7490.0, 7555.0, 7990.0, 7990.0, 7990.0, 8290.0]
 
 		# print("mileage: ", x_mileage)
 		# print("price: ", y_price)
@@ -155,17 +151,15 @@ def main():
 		new_theta0, new_theta1, cost_history = launch_train(theta1, theta0, scaled_mileage, scaled_price)
 
 		t0, t1 = denormalize(new_theta0, new_theta1, x_values, y_values)
-		tt0, tt1 = denormalize1(new_theta0, new_theta1, x_values, y_values)
-		print(f"tt0: {tt0} --- tt1: {tt1}")
 		print(f"theta1_norm		|	theta0_norm		|	theta1_denorm		|	theta0_denorm		")
 		print(f"{new_theta1} 	| 	{new_theta0} 	| 	{t1}	|	{t0}")
 
 		# set_thetas(t0, t1)
 	except TypeError:
-		print("Error")
+		print("Error: TypeError")
 		return None
 	except None:
-		print("Error")
+		print("Error: None")
 		return None
 	except UnboundLocalError:
 		print("Error: Incorrect assignment")
