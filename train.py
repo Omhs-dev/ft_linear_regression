@@ -30,9 +30,9 @@ def load_data():
 		return None
 
 def normalize(data):
-	df = pd.DataFrame({'Value': data})
-	df['Normalized'] = (df["Value"] - df["Value"].min()) / (df["Value"].max() - df["Value"].min())
-	return df['Normalized'].tolist()
+	data_range = max(data) - min(data)
+	data_norm = [(val - min(data)) / data_range for val in data]
+	return data_norm
 
 def denormalize(theta0, theta1, x_data, y_data):
 	x_range = max(x_data) - min(x_data)
