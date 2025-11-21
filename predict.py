@@ -1,5 +1,5 @@
 import json
-import sys
+import os
 
 def prediction(mileage, theta0, theta1):
 	return theta0 + theta1 * mileage
@@ -31,32 +31,26 @@ def get_thetas():
 
 def get_mileage():
 	try:
-		mileage = float(sys.argv[1])
-		if mileage < 0:
+		mileage = input("Provide mileage: ")
+		if int(mileage) < 0:
 			raise Exception
-		return mileage
+		return int(mileage)
 	except ValueError:
 		return None
 
-
 def main():
-		#TODO: make it receive a input as mileage
 		try:
-			if len(sys.argv) <= 2:
-				mileage = get_mileage();
-				theta0, theta1 = get_thetas()
-				price = prediction(mileage, theta0, theta1)
-
-				print("predicted price: %d" % price)
-			else:
-				print("Warning: use only one argument")
-		except IndexError:
-			print("No Argument: mileage has not been provided!")
+			mileage = get_mileage();
+			os.system('cls' if os.name == 'nt' else 'clear')
+			theta0, theta1 = get_thetas()
+			price = prediction(mileage, theta0, theta1)
+			print(f"Predicted price: {price}")
 		except TypeError:
 			print("Error: mileage value is not a valid number")
 			return None
 		except Exception:
-			print("Please a Positive number!")
+			print("Please a Valid and Positive number!")
 			return None
+
 if __name__ == "__main__":
 	main()
