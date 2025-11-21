@@ -40,6 +40,7 @@ def get_mileage():
 
 
 def main():
+		#TODO: make it receive a input as mileage
 		try:
 			if len(sys.argv) <= 2:
 				mileage = get_mileage();
