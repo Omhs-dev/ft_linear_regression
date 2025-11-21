@@ -112,14 +112,14 @@ def launch_train(theta1, theta0, x_values, y_values):
 		print("Initial Cost: %s" % prev_cost)
 
 	cost_history = [prev_cost]
-	print("Iter	|   	Theta1		|   	Theta0		|		Cost	|")
+	# print("Iter	|   	Theta1		|   	Theta0		|		Cost	|")
 	for i in range(max_iterations+1):
 		curr_cost = cost_function(theta1, theta0, x_values, y_values)
 		cost_history.append(curr_cost)
 
 		if i > 0:
 			theta0, theta1 = gradient_update_rule(theta1, theta0, x_values, y_values)
-		print(f"{i}\t|\t{theta1}\t|\t{theta0}\t|\t{curr_cost}\t|")
+		# print(f"{i}\t|\t{theta1}\t|\t{theta0}\t|\t{curr_cost}\t|")
 		if verbose and i % 100 == 0:
 			print(f"Iteration {i}: cost = {curr_cost}\ntheat0 = {theta0}\ntheta1 = {theta1}")
 
@@ -129,13 +129,24 @@ def launch_train(theta1, theta0, x_values, y_values):
 		print(f"Final Cost: {curr_cost}")
 	return theta0, theta1, cost_history
 
+def print_result(t0, t1, td0, td1, cost):
+	results = [
+		("Theta0_norm", t0),
+		("Theta1_norm", t1),
+		("Theta0_denorm", td0),
+		("Theta1_denorm", td1),
+		("Final Cost", cost),
+	]
+	print("-" * 49)
+	for label, val in results:
+		print(f"{label}\t|\t{val}\t|")
+		print("-" * 49)
+
 def main():
 	theta0 = 0
 	theta1 = 0
 	try:
 		x_mileage, y_price = load_data()
-		# x_values = [1, 2, 3, 4]
-		# y_values = [1, 2, 2.5, 4]
 		x_values = [240000.0, 139800.0, 150500.0, 185530.0, 176000.0, 114800.0, 166800.0, 89000.0, 144500.0, 84000.0, 82029.0, 63060.0, 74000.0, 97500.0, 67000.0, 76025.0, 48235.0, 93000.0, 60949.0, 65674.0, 54000.0, 68500.0, 22899.0, 61789.0]
 		y_values = [3650.0, 3800.0, 4400.0, 4450.0, 5250.0, 5350.0, 5800.0, 5990.0, 5999.0, 6200.0, 6390.0, 6390.0, 6600.0, 6800.0, 6800.0, 6900.0, 6900.0, 6990.0, 7490.0, 7555.0, 7990.0, 7990.0, 7990.0, 8290.0]
 
@@ -147,9 +158,7 @@ def main():
 		new_theta0, new_theta1, cost_history = launch_train(theta1, theta0, scaled_mileage, scaled_price)
 
 		t0, t1 = denormalize(new_theta0, new_theta1, x_values, y_values)
-		print(f"Theta1_norm\t\t|\tTheta0_norm\t\t|\tTheta1_denorm\t\t|\tTheta0_denorm\t\t|\tFinal Costd")
-		print(f"{new_theta1}\t|\t{new_theta0}\t|\t{t0}\t|\t{t1}|\t{cost_history[-1]}")
-
+		print_result(new_theta0, new_theta1, t0, t1, cost_history[-1])
 		# set_thetas(t0, t1)
 	except TypeError:
 		print("Error: TypeError")
