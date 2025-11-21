@@ -5,29 +5,6 @@ import csv
 
 import predict
 
-def load_data():
-	x_mileage = 0
-	y_price = 0
-	dataset = []
-	try:
-		with open("data.csv", 'r') as file:
-			csv_reader = csv.reader(file)
-
-			next(csv_reader)
-			for line in csv_reader:
-				# print(line)
-				try:
-					dataset.append([float(value) for value in line])
-				except ValueError:
-					print("Error: value is not a valide number")
-					return None
-			x_mileage = [row[0] for row in dataset]
-			y_price = [row[1] for row in dataset]
-
-			return (x_mileage, y_price)
-	except FileNotFoundError:
-		print("Error: file no found")
-		return None
 def print_result(t0, t1, td0, td1, cost):
 	results = [
 		("Theta0_norm", t0),
@@ -95,7 +72,6 @@ def squared_error(w, b, x_data, y_data):
 		res += ((error(w, b, x_data[i], y_data[i]))**2)
 	return res
 
-#cost function
 def cost_function(w, b, x_data, y_data):
 	m = len(x_data)
 	sq_err_sum = squared_error(w, b, x_data, y_data)
@@ -118,7 +94,10 @@ def main():
 	theta0 = 0
 	theta1 = 0
 	try:
-		x_mileage, y_price = load_data()
+		data = pd.read_csv("data.csv")
+		x_mileage = data["km"].tolist()
+		y_price = data["price"].tolist()
+		# print(f"x : {x_mileage} and y: {y_price}")
 		x_mileage_n = normalize(x_mileage)
 		y_price_n = normalize(y_price)
 		theta0_n, theta1_n, cost_hist = launch_train(theta1, theta0, x_mileage_n, y_price_n)
