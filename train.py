@@ -80,28 +80,32 @@ def cost_function(w, b, x_data, y_data):
 	return cost
 
 def launch_train(theta1, theta0, x_data, y_data):
-	max_iter = 1000
+	iter_num = 1000
 
 	cost_history = []
-	for i in range(max_iter+1):
+	for i in range(iter_num):
 		curr_cost = cost_function(theta1, theta0, x_data, y_data)
 		cost_history.append(curr_cost)
 		if i > 0:
 			theta0, theta1 = gradient_update_rule(theta1, theta0, x_data, y_data)
 	print(f"Iteration {i} \ncost = {curr_cost}\n")
-	return theta0, theta1, cost_history
+	return theta0, theta1, iter_num, cost_history
 
 def visualize_regression(theta0, theta1, x_data, y_data):
 	x_data = np.array(x_data)
 	y_data = np.array(y_data)
 	prediction = predict.prediction(x_data, theta0, theta1)
 	plt.scatter(x_data, y_data)
-	plt.xlabel("Mileage")
-	plt.ylabel("Price")
+	plt.xlabel("Mileage(km)")
+	plt.ylabel("Price(Euro)")
 	plt.plot(x_data, prediction, color="red")
 	plt.show()
 
-# def cost_visualizer():
+def visualize_cost(iter_n, cost_history):
+	plt.plot(range(iter_n), cost_history)
+	plt.xlabel("Iterations")
+	plt.ylabel("Cost")
+	plt.show()
 
 def main():
 	theta0 = 0
@@ -112,11 +116,13 @@ def main():
 		y_price = data["price"].tolist()
 		x_mileage_n = normalize(x_mileage)
 		y_price_n = normalize(y_price)
-		theta0_n, theta1_n, cost_hist = launch_train(theta1, theta0, x_mileage_n, y_price_n)
+		train_model = launch_train(theta1, theta0, x_mileage_n, y_price_n)
+		theta0_n, theta1_n, iterations, cost_hist = train_model
 		theta0_d, theta1_d = denormalize(theta0_n, theta1_n, x_mileage, y_price)
 		print_result(theta0_n, theta1_n, theta0_d, theta1_d, cost_hist[-1])
 		set_thetas(theta0_d, theta1_d)
-		visualize_regression(theta0_d, theta1_d, x_mileage, y_price)
+		# visualize_regression(theta0_d, theta1_d, x_mileage, y_price)
+		visualize_cost(iterations, cost_hist)
 	except FileNotFoundError as e:
 		print(f"Error: File not found. Details: {e}")
 	except KeyError as e:
