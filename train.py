@@ -64,7 +64,6 @@ def b_theta0_gradient(w, b, x_values, y_values):
 	errors_sum = 0
 	for i in range(0, len(x_values)):
 		errors_sum += error(w, b, x_values[i], y_values[i])
-	print(f"errors_sum: {errors_sum}")
 	return (1/m) *errors_sum
 
 #Gradient upate rule
@@ -72,8 +71,8 @@ def gradient_update_rule(theta1, theta0, x_values, y_values):
 	delta_lr = 0.1
 	theta1_grad = w_theta1_gradient(theta1, theta0, x_values, y_values)
 	theta0_grad = b_theta0_gradient(theta1, theta0, x_values, y_values)
-	print("theta1_grad: %f" % theta1_grad)
-	print("theta0_grad: %f" % theta0_grad)	
+	# print("theta1_grad: %f" % theta1_grad)
+	# print("theta0_grad: %f" % theta0_grad)	
 	theta0 -= (delta_lr * theta0_grad)
 	theta1 -= (delta_lr * theta1_grad)
 	return (theta0, theta1)
@@ -104,7 +103,7 @@ def set_thetas(theta0, theta1):
 		return None
 
 def launch_train(theta1, theta0, x_values, y_values):
-	max_iterations = 10
+	max_iterations = 1000
 	tolerance = 1e-7
 	verbose = True
 
@@ -113,17 +112,17 @@ def launch_train(theta1, theta0, x_values, y_values):
 		print("Initial Cost: %s" % prev_cost)
 
 	cost_history = [prev_cost]
-	# print("Iter	|   	Theta1		|   	Theta0		|		Cost	|")
+	print("Iter	|   	Theta1		|   	Theta0		|		Cost	|")
 	for i in range(max_iterations+1):
 		curr_cost = cost_function(theta1, theta0, x_values, y_values)
 		cost_history.append(curr_cost)
 
+		if i > 0:
+			theta0, theta1 = gradient_update_rule(theta1, theta0, x_values, y_values)
+		print(f"{i}\t|\t{theta1}\t|\t{theta0}\t|\t{curr_cost}\t|")
+		if verbose and i % 100 == 0:
+			print(f"Iteration {i}: cost = {curr_cost}\ntheat0 = {theta0}\ntheta1 = {theta1}")
 
-		theta0, theta1 = gradient_update_rule(theta1, theta0, x_values, y_values)
-		# print(f"dernorm_t0: {theta0} --- denorm_t1: {theta1}")
-		# print(f"{i}	|	{theta1}	| {theta0}	|	{curr_cost}	|")
-		# if verbose and i % 100 == 0:
-			# print(f"Iteration {i}: cost = {curr_cost}\ntheat0 = {theta0}\ntheta1 = {theta1}")
 	print(f"Curr_cost: {curr_cost}")
 	if verbose:
 		print("Reached max iteration")
@@ -145,14 +144,11 @@ def main():
 
 		scaled_mileage = normalize(x_values)
 		scaled_price = normalize(y_values)
-		# print("scaled_mileage: %s" % scaled_mileage)
-		# print("scaled_price: %s" % scaled_price)
-
 		new_theta0, new_theta1, cost_history = launch_train(theta1, theta0, scaled_mileage, scaled_price)
 
-		# t0, t1 = denormalize(new_theta0, new_theta1, x_values, y_values)
-		print(f"theta1_norm		|	theta0_norm		|	theta1_denorm		|	theta0_denorm		")
-		print(f"{new_theta1} 	| 	{new_theta0} ")
+		t0, t1 = denormalize(new_theta0, new_theta1, x_values, y_values)
+		print(f"Theta1_norm\t\t|\tTheta0_norm\t\t|\tTheta1_denorm\t\t|\tTheta0_denorm\t\t|\tFinal Costd")
+		print(f"{new_theta1}\t|\t{new_theta0}\t|\t{t0}\t|\t{t1}|\t{cost_history[-1]}")
 
 		# set_thetas(t0, t1)
 	except TypeError:

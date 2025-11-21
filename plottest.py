@@ -71,8 +71,8 @@ def denormalize(theta0, theta1, x_data, y_data):
 w = 0.0   # normalized theta1
 b = 0.0   # normalized theta0
 lr = 0.1
-max_iter = 10
-t0, t1 = denormalize(0.3832, 0.07277, X, Y)
+max_iter = 1000
+t0, t1 = denormalize(0.36446127, 0.07208029, X, Y)
 print(f"dernorm_t0: {t0} --- denorm_t1: {t1}")
 rows = []
 Wd = 0.07277 * (range_y / range_x)    # slope in original units
@@ -102,7 +102,7 @@ for it in range(max_iter + 1):  # include iteration 0..50
     print(f"new w: {w} - new b: {b} - w_denorm: {W} - b_denorm: {B}")
 
 # Print nicely
-# print("Iter |   w_norm    |   b_norm    | cost_norm  |  W_denorm   |  B_denorm   | cost_orig")
-# print("-" * 85)
-# for it, w, b, cost_norm, W, B, cost_orig in rows:
-#     print(f"{it:4d} | {w:11.8f} | {b:11.8f} | {cost_norm:10.8f} | {W:11.8f} | {B:11.8f} | {cost_orig:10.8f}")
+print("Iter |   w_norm    |   b_norm    | cost_norm  |  W_denorm   |  B_denorm   | cost_orig")
+print("-" * 85)
+for it, w, b, cost_norm, W, B, cost_orig in rows:
+    print(f"{it:4d} | {w:11.8f} | {b:11.8f} | {cost_norm:10.8f} | {W:11.8f} | {B:11.8f} | {cost_orig:10.8f}")
