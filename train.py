@@ -1,8 +1,9 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-import json
 import traceback
+import json
+import os
 
 import predict
 
@@ -107,6 +108,24 @@ def visualize_cost(iter_n, cost_history):
 	plt.ylabel("Cost")
 	plt.show()
 
+def print_info():
+	print("\n=== Training Options ===")
+	print("Please choose one of the following options:")
+	print("1. Train the model with raw data")
+	print("2. Visualize the regression results")
+	print("3. Visualize the cost function over iterations\n")
+	print("Enter a number to proceed:")
+
+def input_select():
+	try:
+		input_opt = input("proceed:")
+		if input_opt == None or not isinstance(int(input_opt), int):
+			return None
+		return int(input_opt)
+	except ValueError:
+		print("Invalid number")
+		return None
+
 def main():
 	theta0 = 0
 	theta1 = 0
@@ -116,13 +135,24 @@ def main():
 		y_price = data["price"].tolist()
 		x_mileage_n = normalize(x_mileage)
 		y_price_n = normalize(y_price)
+		
 		train_model = launch_train(theta1, theta0, x_mileage_n, y_price_n)
 		theta0_n, theta1_n, iterations, cost_hist = train_model
 		theta0_d, theta1_d = denormalize(theta0_n, theta1_n, x_mileage, y_price)
-		print_result(theta0_n, theta1_n, theta0_d, theta1_d, cost_hist[-1])
-		set_thetas(theta0_d, theta1_d)
-		# visualize_regression(theta0_d, theta1_d, x_mileage, y_price)
-		visualize_cost(iterations, cost_hist)
+
+		print_info()
+		input_opt = input_select()
+		os.system('clear')
+		if input_opt == 1:
+			print("one")
+			# print_result(theta0_n, theta1_n, theta0_d, theta1_d, cost_hist[-1])
+			# set_thetas(theta0_d, theta1_d)
+		elif input_opt == 2:
+			visualize_regression(theta0_d, theta1_d, x_mileage, y_price)
+		elif input_opt == 3:
+			visualize_cost(iterations, cost_hist)
+		else:
+			print("Enter a valid number between 1-3")
 	except FileNotFoundError as e:
 		print(f"Error: File not found. Details: {e}")
 	except KeyError as e:
