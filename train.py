@@ -107,16 +107,14 @@ def visualize_cost(iter_n, cost_history):
 	plt.show()
 
 def print_info():
-	print("\n=== Training Options ===")
-	print("Please choose one of the following options:")
+	print("\n=== Training Options ===\n")
 	print("1. Train the model with raw data")
 	print("2. Visualize the regression results")
 	print("3. Visualize the cost function over iterations\n")
-	print("Enter a number to proceed:")
 
 def input_select():
 	try:
-		input_opt = input("proceed:")
+		input_opt = input("Proceed:")
 		if input_opt == None or not isinstance(int(input_opt), int):
 			return None
 		return int(input_opt)
