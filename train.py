@@ -1,7 +1,7 @@
-import pandas as pd
 import matplotlib.pyplot as plt
+import pandas as pd
 import json
-import csv
+import traceback
 
 import predict
 
@@ -42,7 +42,7 @@ def denormalize(theta0, theta1, x_data, y_data):
 	return float(dernorm_t0), float(dernorm_t1)
 
 def error(w, b, x, y):
-	return predict.prediction(x, b, w) - y
+	return (b + w*x) - y
 
 def w_theta1_gradient(w, b, x_data, y_data):
 	m = len(x_data)
@@ -90,6 +90,13 @@ def launch_train(theta1, theta0, x_data, y_data):
 	print(f"Iteration {i} \ncost = {curr_cost}\n")
 	return theta0, theta1, cost_history
 
+def plott_data(x_data, y_data):
+	plt.scatter(x_data, y_data)
+	plt.xlabel("Mileage")
+	plt.ylabel("Price")
+	# plt.plot(x_data, predict.prediction(x_data, theta0, theta1), color="red")
+	plt.show()
+
 def main():
 	theta0 = 0
 	theta1 = 0
@@ -97,22 +104,20 @@ def main():
 		data = pd.read_csv("data.csv")
 		x_mileage = data["km"].tolist()
 		y_price = data["price"].tolist()
-		# print(f"x : {x_mileage} and y: {y_price}")
 		x_mileage_n = normalize(x_mileage)
 		y_price_n = normalize(y_price)
 		theta0_n, theta1_n, cost_hist = launch_train(theta1, theta0, x_mileage_n, y_price_n)
 		theta0_d, theta1_d = denormalize(theta0_n, theta1_n, x_mileage, y_price)
 		print_result(theta0_n, theta1_n, theta0_d, theta1_d, cost_hist[-1])
 		set_thetas(theta0_d, theta1_d)
-	except TypeError:
-		print("Error: TypeError")
-		return None
-	except None:
-		print("Error: None")
-		return None
-	except UnboundLocalError:
-		print("Error: Incorrect assignment")
-		return None
+		plott_data(theta0_d, theta1_d, x_mileage, y_price)
+	except FileNotFoundError as e:
+		print(f"Error: File not found. Details: {e}")
+	except KeyError as e:
+		print(f"Error: Missing column. Details: {e}")
+	except Exception as e:
+		print(f"An unexpected error occurred: {e}")
+		traceback.print_exc()
 
 if __name__ == "__main__":
 	main()
