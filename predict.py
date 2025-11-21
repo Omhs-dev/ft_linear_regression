@@ -39,18 +39,18 @@ def get_mileage():
 		return None
 
 def main():
-		try:
-			mileage = get_mileage();
-			os.system('cls' if os.name == 'nt' else 'clear')
-			theta0, theta1 = get_thetas()
-			price = prediction(mileage, theta0, theta1)
-			print(f"Predicted price: {price}")
-		except TypeError:
-			print("Error: mileage value is not a valid number")
-			return None
-		except Exception:
-			print("Please a Valid and Positive number!")
-			return None
+	try:
+		mileage = get_mileage();
+		os.system('cls' if os.name == 'nt' else 'clear')
+		theta0, theta1 = get_thetas()
+		price = prediction(mileage, theta0, theta1)
+		print(f"Predicted price: {price}")
+	except TypeError:
+		print("Error: mileage value is not a valid number")
+		return None
+	except Exception:
+		print("Please a Valid and Positive number!")
+		return None
 
 if __name__ == "__main__":
 	main()
