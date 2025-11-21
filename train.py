@@ -28,6 +28,29 @@ def load_data():
 	except FileNotFoundError:
 		print("Error: file no found")
 		return None
+def print_result(t0, t1, td0, td1, cost):
+	results = [
+		("Theta0_norm", t0),
+		("Theta1_norm", t1),
+		("Theta0_denorm", td0),
+		("Theta1_denorm", td1),
+		("Final Cost", cost),
+	]
+	print("-" * 49)
+	for label, val in results:
+		print(f"{label}\t|\t{val}\t|")
+		print("-" * 49)
+
+def set_thetas(theta0, theta1):
+	try:
+		with open("values.json", "w") as json_file:
+			json.dump({"Theta0": theta0, "Theta1": theta1}, json_file)
+	except FileNotFoundError:
+		print("Error: file 'value.json' not found")
+		return None
+	except json.JSONDecodeError:
+		print("Error: failed to decode JSON file")
+		return None
 
 def normalize(data):
 	data_range = max(data) - min(data)
@@ -58,13 +81,10 @@ def b_theta0_gradient(w, b, x_data, y_data):
 		errors_sum += error(w, b, x_data[i], y_data[i])
 	return (1/m) *errors_sum
 
-#Gradient upate rule
 def gradient_update_rule(theta1, theta0, x_data, y_data):
 	delta_lr = 0.1
 	theta1_grad = w_theta1_gradient(theta1, theta0, x_data, y_data)
 	theta0_grad = b_theta0_gradient(theta1, theta0, x_data, y_data)
-	# print("theta1_grad: %f" % theta1_grad)
-	# print("theta0_grad: %f" % theta0_grad)	
 	theta0 -= (delta_lr * theta0_grad)
 	theta1 -= (delta_lr * theta1_grad)
 	return (theta0, theta1)
@@ -82,57 +102,17 @@ def cost_function(w, b, x_data, y_data):
 	cost = (1/(2 * m)) * sq_err_sum
 	return cost
 
-def set_thetas(theta0, theta1):
-	try:
-		with open("values.json", "w") as json_file:
-			json.dump({"Theta0": theta0, "Theta1": theta1}, json_file)
-
-	except FileNotFoundError:
-		print("Error: file 'value.json' not found")
-		return None
-	except json.JSONDecodeError:
-		print("Error: failed to decode JSON file")
-		return None
-
 def launch_train(theta1, theta0, x_data, y_data):
-	max_iterations = 1000
-	tolerance = 1e-7
-	verbose = True
+	max_iter = 1000
 
-	prev_cost = cost_function(theta1, theta0, x_data, y_data)
-	if verbose:
-		print("Initial Cost: %s" % prev_cost)
-
-	cost_history = [prev_cost]
-	# print("Iter	|   	Theta1		|   	Theta0		|		Cost	|")
-	for i in range(max_iterations+1):
+	cost_history = []
+	for i in range(max_iter+1):
 		curr_cost = cost_function(theta1, theta0, x_data, y_data)
 		cost_history.append(curr_cost)
-
 		if i > 0:
 			theta0, theta1 = gradient_update_rule(theta1, theta0, x_data, y_data)
-		# print(f"{i}\t|\t{theta1}\t|\t{theta0}\t|\t{curr_cost}\t|")
-		if verbose and i % 100 == 0:
-			print(f"Iteration {i}: cost = {curr_cost}\ntheat0 = {theta0}\ntheta1 = {theta1}")
-
-	print(f"Curr_cost: {curr_cost}")
-	if verbose:
-		print("Reached max iteration")
-		print(f"Final Cost: {curr_cost}")
+	print(f"Iteration {i} \ncost = {curr_cost}\n")
 	return theta0, theta1, cost_history
-
-def print_result(t0, t1, td0, td1, cost):
-	results = [
-		("Theta0_norm", t0),
-		("Theta1_norm", t1),
-		("Theta0_denorm", td0),
-		("Theta1_denorm", td1),
-		("Final Cost", cost),
-	]
-	print("-" * 49)
-	for label, val in results:
-		print(f"{label}\t|\t{val}\t|")
-		print("-" * 49)
 
 def main():
 	theta0 = 0
