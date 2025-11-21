@@ -91,7 +91,7 @@ def launch_train(theta1, theta0, x_data, y_data):
 	print(f"Iteration {i} \ncost = {curr_cost}\n")
 	return theta0, theta1, cost_history
 
-def plott_data(theta0, theta1, x_data, y_data):
+def visualize_regression(theta0, theta1, x_data, y_data):
 	x_data = np.array(x_data)
 	y_data = np.array(y_data)
 	prediction = predict.prediction(x_data, theta0, theta1)
@@ -116,7 +116,7 @@ def main():
 		theta0_d, theta1_d = denormalize(theta0_n, theta1_n, x_mileage, y_price)
 		print_result(theta0_n, theta1_n, theta0_d, theta1_d, cost_hist[-1])
 		set_thetas(theta0_d, theta1_d)
-		plott_data(theta0_d, theta1_d, x_mileage, y_price)
+		visualize_regression(theta0_d, theta1_d, x_mileage, y_price)
 	except FileNotFoundError as e:
 		print(f"Error: File not found. Details: {e}")
 	except KeyError as e:
