@@ -20,6 +20,12 @@ def print_result(t0, t1, td0, td1, cost):
 		print(f"{label}\t|\t{val}\t|")
 		print("-" * 49)
 
+def print_info():
+	print("\n=== Training Options ===\n")
+	print("1. Train the model with raw data")
+	print("2. Visualize the regression results")
+	print("3. Visualize the cost function over iterations\n")
+
 def set_thetas(theta0, theta1):
 	try:
 		with open("values.json", "w") as json_file:
@@ -105,12 +111,6 @@ def visualize_cost(iter_n, cost_history):
 	plt.xlabel("Iterations")
 	plt.ylabel("Cost")
 	plt.show()
-
-def print_info():
-	print("\n=== Training Options ===\n")
-	print("1. Train the model with raw data")
-	print("2. Visualize the regression results")
-	print("3. Visualize the cost function over iterations\n")
 
 def input_select():
 	try:
