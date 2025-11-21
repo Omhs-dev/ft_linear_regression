@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 import json
 import traceback
 
@@ -90,12 +91,17 @@ def launch_train(theta1, theta0, x_data, y_data):
 	print(f"Iteration {i} \ncost = {curr_cost}\n")
 	return theta0, theta1, cost_history
 
-def plott_data(x_data, y_data):
+def plott_data(theta0, theta1, x_data, y_data):
+	x_data = np.array(x_data)
+	y_data = np.array(y_data)
+	prediction = predict.prediction(x_data, theta0, theta1)
 	plt.scatter(x_data, y_data)
 	plt.xlabel("Mileage")
 	plt.ylabel("Price")
-	# plt.plot(x_data, predict.prediction(x_data, theta0, theta1), color="red")
+	plt.plot(x_data, prediction, color="red")
 	plt.show()
+
+# def cost_visualizer():
 
 def main():
 	theta0 = 0
