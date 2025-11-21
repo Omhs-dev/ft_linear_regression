@@ -141,18 +141,18 @@ def main():
 		theta0_d, theta1_d = denormalize(theta0_n, theta1_n, x_mileage, y_price)
 
 		print_info()
+
 		input_opt = input_select()
 		os.system('clear')
 		if input_opt == 1:
-			print("one")
-			# print_result(theta0_n, theta1_n, theta0_d, theta1_d, cost_hist[-1])
-			# set_thetas(theta0_d, theta1_d)
+			print_result(theta0_n, theta1_n, theta0_d, theta1_d, cost_hist[-1])
 		elif input_opt == 2:
 			visualize_regression(theta0_d, theta1_d, x_mileage, y_price)
 		elif input_opt == 3:
 			visualize_cost(iterations, cost_hist)
 		else:
 			print("Enter a valid number between 1-3")
+		set_thetas(theta0_d, theta1_d)
 	except FileNotFoundError as e:
 		print(f"Error: File not found. Details: {e}")
 	except KeyError as e:
