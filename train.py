@@ -87,9 +87,7 @@ def launch_train(theta1, theta0, x_data, y_data):
 	for i in range(iter_num):
 		curr_cost = cost_function(theta1, theta0, x_data, y_data)
 		cost_history.append(curr_cost)
-		if i > 0:
-			theta0, theta1 = gradient_update_rule(theta1, theta0, x_data, y_data)
-	print(f"Iteration {i} \ncost = {curr_cost}\n")
+		theta0, theta1 = gradient_update_rule(theta1, theta0, x_data, y_data)
 	return theta0, theta1, iter_num, cost_history
 
 def visualize_regression(theta0, theta1, x_data, y_data):
@@ -144,6 +142,7 @@ def main():
 
 		input_opt = input_select()
 		os.system('clear')
+
 		if input_opt == 1:
 			print_result(theta0_n, theta1_n, theta0_d, theta1_d, cost_hist[-1])
 		elif input_opt == 2:
@@ -152,6 +151,8 @@ def main():
 			visualize_cost(iterations, cost_hist)
 		else:
 			print("Enter a valid number between 1-3")
+
+		print(f"Iteration\t|\t\t{iterations}\t\t|")
 		set_thetas(theta0_d, theta1_d)
 	except FileNotFoundError as e:
 		print(f"Error: File not found. Details: {e}")
