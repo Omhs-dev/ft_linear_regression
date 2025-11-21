@@ -57,22 +57,33 @@ def gradients_norm(w, b):
         y_pred = w * xi + b
         dw += (y_pred - yi) * xi
         db += (y_pred - yi)
-        print(f"error: {y_pred} -- dw: {dw} -- db: {db}")
+        # print(f"error: {y_pred} -- dw: {dw} -- db: {db}")
     return dw / m, db / m
+
+def denormalize(theta0, theta1, x_data, y_data):
+	x_range = max(x_data) - min(x_data)
+	y_range = max(y_data) - min(y_data)
+	dernorm_t1 = theta1 * ( y_range / x_range)
+	dernorm_t0 = theta0 * (y_range) + min(y_data) - dernorm_t1 * min(x_data)
+	return float(dernorm_t0), float(dernorm_t1)
 
 # gradient descent parameters
 w = 0.0   # normalized theta1
 b = 0.0   # normalized theta0
 lr = 0.1
 max_iter = 10
-
+t0, t1 = denormalize(0.3832, 0.07277, X, Y)
+print(f"dernorm_t0: {t0} --- denorm_t1: {t1}")
 rows = []
+Wd = 0.07277 * (range_y / range_x)    # slope in original units
+Bd = 0.3832 * range_y + ymin - Wd * xmin
+print(f"Wd: {Wd} --- bd: {Bd}")
 for it in range(max_iter + 1):  # include iteration 0..50
     cost_norm = compute_cost_norm(w, b)
 
     # denormalize parameters (min-max)
-    W = w * (range_y / range_x)    # slope in original units
-    B = b * range_y + ymin - W * xmin
+
+    W, B = denormalize(b, w, X, Y)
 
     # cost on original data using denormalized params
     total_orig = 0.0
@@ -85,7 +96,7 @@ for it in range(max_iter + 1):  # include iteration 0..50
 
     # batch update
     dw, db = gradients_norm(w, b)
-    print(f"gradient w: {dw} -- gradient b: {db}")
+    # print(f"gradient w: {dw} -- gradient b: {db}")
     w = w - lr * dw
     b = b - lr * db
     print(f"new w: {w} - new b: {b} - w_denorm: {W} - b_denorm: {B}")

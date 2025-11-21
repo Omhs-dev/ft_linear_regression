@@ -41,10 +41,13 @@ def denormalize(theta0, theta1, x_data, y_data):
 	dernorm_t0 = theta0 * (y_range) + min(y_data) - dernorm_t1 * min(x_data)
 	return float(dernorm_t0), float(dernorm_t1)
 
-# x_data, y_data = load_data()
+
+
+x_data, y_data = load_data()
+t0, t1 = denormalize(0.3832180235039033, 0.07276542047951033, x_data, y_data)
+print(f"dernorm_t0: {t0} --- denorm_t1: {t1}")
 
 def error(w, b, x, y):
-	print(f"error: {(b + w*x) - y}")
 	return (b + w*x) - y
 
 def w_theta1_gradient(w, b, x_values, y_values):
@@ -115,7 +118,9 @@ def launch_train(theta1, theta0, x_values, y_values):
 		curr_cost = cost_function(theta1, theta0, x_values, y_values)
 		cost_history.append(curr_cost)
 
+
 		theta0, theta1 = gradient_update_rule(theta1, theta0, x_values, y_values)
+		# print(f"dernorm_t0: {theta0} --- denorm_t1: {theta1}")
 		# print(f"{i}	|	{theta1}	| {theta0}	|	{curr_cost}	|")
 		# if verbose and i % 100 == 0:
 			# print(f"Iteration {i}: cost = {curr_cost}\ntheat0 = {theta0}\ntheta1 = {theta1}")
@@ -145,9 +150,9 @@ def main():
 
 		new_theta0, new_theta1, cost_history = launch_train(theta1, theta0, scaled_mileage, scaled_price)
 
-		t0, t1 = denormalize(new_theta0, new_theta1, x_values, y_values)
+		# t0, t1 = denormalize(new_theta0, new_theta1, x_values, y_values)
 		print(f"theta1_norm		|	theta0_norm		|	theta1_denorm		|	theta0_denorm		")
-		print(f"{new_theta1:11.8f} 	| 	{new_theta0} 	| 	{t1}	|	{t0}")
+		print(f"{new_theta1} 	| 	{new_theta0} ")
 
 		# set_thetas(t0, t1)
 	except TypeError:
