@@ -44,7 +44,7 @@ def main():
 		os.system('clear')
 		theta0, theta1 = get_thetas()
 		price = prediction(mileage, theta0, theta1)
-		print(f"Predicted price: {price}")
+		print("Predicted price: %d" % price)
 	except TypeError:
 		print("Error: mileage value is not a valid number")
 		return None
