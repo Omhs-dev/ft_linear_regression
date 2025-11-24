@@ -41,7 +41,7 @@ def get_mileage():
 def main():
 	try:
 		mileage = get_mileage();
-		os.system('cls' if os.name == 'nt' else 'clear')
+		os.system('clear')
 		theta0, theta1 = get_thetas()
 		price = prediction(mileage, theta0, theta1)
 		print(f"Predicted price: {price}")
