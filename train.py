@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-import traceback
 import json
 import os
 
@@ -24,7 +23,8 @@ def print_info():
 	print("\n=== Training Options ===\n")
 	print("1. Train the model with raw data")
 	print("2. Visualize the regression results")
-	print("3. Visualize the cost function over iterations\n")
+	print("3. Visualize the cost function over iterations")
+	print("4. Quit\n")
 
 def set_thetas(theta0, theta1):
 	try:
@@ -131,15 +131,14 @@ def main():
 		y_price = data["price"].tolist()
 		x_mileage_n = normalize(x_mileage)
 		y_price_n = normalize(y_price)
-		
+
+		print_info()
+		input_opt = input_select()
+		os.system('clear')
+
 		train_model = launch_train(theta1, theta0, x_mileage_n, y_price_n)
 		theta0_n, theta1_n, iterations, cost_hist = train_model
 		theta0_d, theta1_d = denormalize(theta0_n, theta1_n, x_mileage, y_price)
-
-		print_info()
-
-		input_opt = input_select()
-		os.system('clear')
 
 		if input_opt == 1:
 			print_result(theta0_n, theta1_n, theta0_d, theta1_d, cost_hist[-1])
@@ -147,18 +146,24 @@ def main():
 			visualize_regression(theta0_d, theta1_d, x_mileage, y_price)
 		elif input_opt == 3:
 			visualize_cost(iterations, cost_hist)
+		elif input_opt == 4:
+			return
 		else:
-			print("Enter a valid number between 1-3")
+			print("Enter a valid number between 1-4")
 
 		print(f"Iteration\t|\t\t{iterations}\t\t|")
 		set_thetas(theta0_d, theta1_d)
-	except FileNotFoundError as e:
-		print(f"Error: File not found. Details: {e}")
-	except KeyError as e:
-		print(f"Error: Missing column. Details: {e}")
-	except Exception as e:
-		print(f"An unexpected error occurred: {e}")
-		traceback.print_exc()
+	except pd.errors.EmptyDataError:
+		print(f"Error: file is empty")
+	except FileNotFoundError:
+		print(f"Error: File not found.")
+	except KeyError:
+		print(f"Error: Missing column.")
+	except TypeError:
+		print(f"Error: Invalid file data.")
+	except KeyboardInterrupt:
+		print("\nExiting...")
+		quit()
 
 if __name__ == "__main__":
 	main()

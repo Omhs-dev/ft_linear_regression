@@ -5,6 +5,8 @@ def prediction(mileage, theta0, theta1):
 	return theta0 + theta1 * mileage
 
 def get_thetas():
+	theta0 = 0
+	theta1 = 0
 	try:
 		with open("values.json", "r") as file:
 			read_file = json.load(file)
@@ -21,10 +23,9 @@ def get_thetas():
 				print("Error: ThetaO ro Theta 1 is not a valide number")
 				return None
 
-			return (theta0, theta1)
+		return (theta0, theta1)
 	except FileNotFoundError:
-		print("Error: file 'value.json' not found")
-		return None
+		return theta0, theta1
 	except json.JSONDecodeError:
 		print("Error: failed to decode JSON file")
 		return None
