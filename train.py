@@ -21,9 +21,9 @@ def print_result(t0, t1, td0, td1, cost):
 
 def print_info():
 	print("\n=== Training Options ===\n")
-	print("1. Train the model with raw data")
-	print("2. Visualize the regression results")
-	print("3. Visualize the cost function over iterations")
+	print("1. Train with raw data")
+	print("2. Visualize regression results")
+	print("3. Visualize cost function over iterations")
 	print("4. Quit\n")
 
 def set_thetas(theta0, theta1):
