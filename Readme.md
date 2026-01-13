@@ -49,3 +49,7 @@ Place generated images in `./assets`:
 ## Notes
 - The learning rate is `0.1` and default iterations are `1000` (`launch_train`).
 - Plots use Matplotlib; data is read via Pandas.
+
+## 42 Project
+
+This project was made as part of the **42** curriculum.
